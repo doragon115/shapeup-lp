@@ -1,0 +1,18 @@
+{
+  "name": "shapeup-lp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "シェイプアップ大学 LP — Instagram公式APIと連携して最新情報・投稿別ページ・sitemap・RSS・IndexNowを自動更新する静的サイト",
+  "scripts": {
+    "build": "node scripts/sync.mjs --mock",
+    "sync": "node scripts/sync.mjs",
+    "sync:mock": "node scripts/sync.mjs --mock",
+    "sync:force": "node scripts/sync.mjs --mock --force",
+    "preview": "node --experimental-default-type=module scripts/serve.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

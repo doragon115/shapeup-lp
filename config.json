@@ -1,0 +1,63 @@
+{
+  "site": {
+    "name": "シェイプアップ大学",
+    "tagline": "がまんしないダイエットの学校",
+    "programHeadline": "運動に頼らず、21日間で「続けやすい食習慣」を見直す",
+    "proofLine": "4,500人以上が学んだ、50代女性のための食習慣の学校",
+    "proofSection": {
+      "heading": "実績について",
+      "graduateCount": "累計4,500人以上の卒業生",
+      "instructorBasis": "指導は、シェイプアップ大学を卒業した方々が担っています。"
+    },
+    "description": "たんぱく質を意識しながら、続けやすい食習慣づくりを学ぶオンラインの学校です。説明会のご案内は公式LINEでお届けします。",
+    "baseUrl": "https://shapeup-university.pages.dev",
+    "locale": "ja_JP",
+    "twitter": "@universityshapeup"
+  },
+  "instagram": {
+    "handle": "universityshapeup",
+    "profileUrl": "https://www.instagram.com/universityshapeup/",
+    "latestCount": 6
+  },
+  "threads": {
+    "handle": "universityshapeup",
+    "profileUrl": "https://www.threads.com/@universityshapeup"
+  },
+  "cta": {
+    "zoomSeminarUrl": "https://example.com/zoom-seminar",
+    "zoomSeminarLabel": "無料Zoom説明会に申し込む",
+    "lineUrl": "https://line.me/R/ti/p/@dpi4359e",
+    "lineLabel": "公式LINEに登録して無料PDFを受け取る",
+    "lineBenefit": "更年期からの食べ方を見直すヒント"
+  },
+  "legal": {
+    "operatorName": "シェイプアップ大学",
+    "postalCode": "〒968-0421",
+    "address": "福島県南会津郡只見町只見新町2170-1 只見エコオフィス3号",
+    "phone": "090-9808-6015",
+    "responsiblePerson": "平松悟",
+    "contactUrl": "https://line.me/R/ti/p/@dpi4359e",
+    "contactLabel": "公式LINEでお問い合わせ",
+    "termsSummary": "本サービスは、LINEでの案内とオンライン説明会へのご案内を中心とした情報提供サービスです。",
+    "privacySummary": "取得した個人情報は、お問い合わせ対応、説明会案内、サービス改善のために必要な範囲で利用します。",
+    "_notes": [
+      "特商法表記に必要な住所・電話番号・責任者名は未確認のため、公開前に追記してください。",
+      "個人情報保護管理者や問い合わせメールを使う場合は、ここに正本を追加してください。"
+    ]
+  },
+  "publishing": {
+    "ready": true
+  },
+  "indexnow": {
+    "enabled": false,
+    "keyEnvVar": "INDEXNOW_KEY",
+    "endpoints": [
+      "https://api.indexnow.org/indexnow"
+    ]
+  },
+  "_notes": [
+    "baseUrl は本番ドメインに差し替えてください（Cloudflare Pagesの独自ドメイン or *.pages.dev）。",
+    "cta.zoomSeminarUrl / lineUrl は実際のURLに差し替えてください。",
+    "indexnow.enabled は本番デプロイ後に true にします。キー自体は環境変数 INDEXNOW_KEY で渡し、ここには書きません。"
+  ]
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shapeup-university.pages.dev/sitemap.xml

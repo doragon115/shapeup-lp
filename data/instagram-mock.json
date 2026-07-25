@@ -1,0 +1,76 @@
+{
+  "_comment": "本番のInstagram Graph API (/me/media) 応答を模した仮データ。認証情報が入ったら fetch-instagram.mjs が実データに差し替えます。title / summary は人が読んで価値のある見出し・要約（機械コピペではない）。",
+  "data": [
+    {
+      "id": "18000000000000001",
+      "media_type": "IMAGE",
+      "permalink": "https://www.instagram.com/p/MOCK0001/",
+      "timestamp": "2026-07-14T09:30:00+0900",
+      "media_url": "https://picsum.photos/seed/shapeup1/800/800",
+      "caption": "たんぱく質を意識した食事から始めてみませんか？卵・肉・魚など、身近な食材を食卓に取り入れるヒントを紹介します。#ダイエット #たんぱく質",
+      "title": "「野菜から食べる」をやめる — 主役はたんぱく質",
+      "summary": "食事の順番や内容は、人それぞれの生活に合わせて考えることが大切です。卵・肉・魚など、身近な食材を取り入れるヒントを紹介します。"
+    },
+    {
+      "id": "18000000000000002",
+      "media_type": "IMAGE",
+      "permalink": "https://www.instagram.com/p/MOCK0002/",
+      "timestamp": "2026-07-12T18:00:00+0900",
+      "media_url": "https://picsum.photos/seed/shapeup2/800/800",
+      "caption": "『フードノイズ』という言葉、知っていますか？食べ物のことが頭から離れないと感じるときの話です。背景は人によってさまざまです。",
+      "title": "フードノイズが止まらない人へ",
+      "summary": "食べ物のことが気になる背景は人によってさまざまです。食事を見直すときの考え方と、取り入れやすい食材を紹介します。"
+    },
+    {
+      "id": "18000000000000003",
+      "media_type": "VIDEO",
+      "permalink": "https://www.instagram.com/p/MOCK0003/",
+      "timestamp": "2026-07-10T12:15:00+0900",
+      "media_url": "https://picsum.photos/seed/shapeup3/800/800",
+      "thumbnail_url": "https://picsum.photos/seed/shapeup3/800/800",
+      "caption": "GLP-1を使用中・使用後の不安について。服薬の開始・中止・変更は、必ず医師や薬剤師に相談してください。ここでは日々の食事を見直すヒントを紹介します。",
+      "title": "GLP-1を使用中・使用後の不安と食事の考え方",
+      "summary": "服薬に関する判断は医療者に相談してください。そのうえで、日々の食事を見直すときの考え方を紹介します。"
+    },
+    {
+      "id": "18000000000000004",
+      "media_type": "IMAGE",
+      "permalink": "https://www.instagram.com/p/MOCK0004/",
+      "timestamp": "2026-07-08T08:00:00+0900",
+      "media_url": "https://picsum.photos/seed/shapeup4/800/800",
+      "caption": "更年期世代の生活リズムの変化と、日々の食事を見直すヒントを紹介します。気になる症状がある場合は医療機関に相談してください。",
+      "title": "更年期世代の生活リズムと食事",
+      "summary": "生活リズムの変化に合わせて、日々の食事を見直すときの考え方を紹介します。"
+    },
+    {
+      "id": "18000000000000005",
+      "media_type": "CAROUSEL_ALBUM",
+      "permalink": "https://www.instagram.com/p/MOCK0005/",
+      "timestamp": "2026-07-05T20:30:00+0900",
+      "media_url": "https://picsum.photos/seed/shapeup5/800/800",
+      "caption": "体重変化後にも続けやすい、3つの食習慣。①たんぱく質を意識する ②水分をこまめにとる ③体重より『続けられたか』を記録する。保存して見返してください。",
+      "title": "続けやすい3つの食習慣",
+      "summary": "たんぱく質を意識する、水分をこまめにとる、『続けられたか』を記録する。日々の食事を見直すための3つのヒントを紹介します。"
+    },
+    {
+      "id": "18000000000000006",
+      "media_type": "IMAGE",
+      "permalink": "https://www.instagram.com/p/MOCK0006/",
+      "timestamp": "2026-07-02T07:45:00+0900",
+      "media_url": "https://picsum.photos/seed/shapeup6/800/800",
+      "caption": "毎朝たまごを食べていますか？手軽に取り入れやすい、栄養価のあるたんぱく源です。量や食事制限は個人差があるため、必要に応じて専門職に相談してください。",
+      "title": "毎朝のたまご、何個までOK？",
+      "summary": "たまごは手軽に取り入れやすい、栄養価のあるたんぱく源です。自分の食事に取り入れるときの考え方を紹介します。"
+    },
+    {
+      "id": "18000000000000007",
+      "media_type": "IMAGE",
+      "permalink": "https://www.instagram.com/p/MOCK0007/",
+      "timestamp": "2026-06-29T19:00:00+0900",
+      "media_url": "https://picsum.photos/seed/shapeup7/800/800",
+      "caption": "一時的な我慢だけに頼らず、毎日の食事を見直すヒントを学びます。シェイプアップ大学が『大学』と名乗る理由は、長く役立つ食の知識を学ぶ場所だからです。",
+      "title": "なぜ『大学』なのか — 一生使える食の知識",
+      "summary": "一時的な我慢だけに頼らず、日々の食事を見直す考え方を学びます。シェイプアップ大学は、長く役立つ食の知識を学ぶ場所です。"
+    }
+  ]
+}
