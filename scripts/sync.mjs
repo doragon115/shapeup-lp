@@ -32,11 +32,10 @@ async function mirrorPublicToDist() {
   await mkdir('dist/.openai', { recursive: true });
   await mkdir('dist/server', { recursive: true });
   await writeText('dist/.openai/hosting.json', JSON.stringify(await loadJson('.openai/hosting.json'), null, 2) + '\n');
-  await writeText('dist/server/index.js', `import { readFile } from 'node:fs/promises';
-import { dirname, extname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+  await writeText('dist/server/index.js', `import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { extname, resolve } from 'node:path';
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const types = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -50,6 +49,20 @@ const types = {
   '.webp': 'image/webp',
   '.svg': 'image/svg+xml',
 };
+
+function resolveRoot() {
+  const cwd = process.cwd();
+  const candidates = [
+    cwd,
+    resolve(cwd, 'dist'),
+    resolve(cwd, '..', 'dist'),
+    resolve(cwd, '..'),
+    resolve(cwd, '..', '..', 'dist'),
+  ];
+  return candidates.find((candidate) => existsSync(resolve(candidate, 'index.html'))) ?? cwd;
+}
+
+const root = resolveRoot();
 
 async function render(pathname) {
   let path = pathname === '/' ? '/index.html' : pathname;
