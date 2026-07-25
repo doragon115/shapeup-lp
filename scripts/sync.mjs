@@ -5,9 +5,9 @@
 //   node scripts/sync.mjs --force   # 差分が無くても再生成
 //
 // 「変化があった時だけ生成・コミット」= 無投稿日は何もしない（要件2・6・10）。
-import { appendFile, copyFile, mkdir, readdir, rm } from 'node:fs/promises';
-import { join } from 'node:path';
-import { loadJson, saveJson, contentSignature } from './lib.mjs';
+import { appendFile, copyFile, mkdir, readdir } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import { loadJson, saveJson, contentSignature, writeText } from './lib.mjs';
 import { fetchPosts } from './fetch-instagram.mjs';
 import { buildSite } from './build-site.mjs';
 import { submitIndexNow } from './indexnow.mjs';
@@ -28,8 +28,46 @@ async function setActionOutput(key, value) {
 }
 
 async function mirrorPublicToDist() {
-  await rm('dist', { recursive: true, force: true });
   await copyTree('public', 'dist');
+  await mkdir('dist/.openai', { recursive: true });
+  await mkdir('dist/server', { recursive: true });
+  await writeText('dist/.openai/hosting.json', JSON.stringify(await loadJson('.openai/hosting.json'), null, 2) + '\n');
+  await writeText('dist/server/index.js', `import { readFile } from 'node:fs/promises';
+import { dirname, extname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const types = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+};
+
+async function render(pathname) {
+  let path = pathname === '/' ? '/index.html' : pathname;
+  if (path.endsWith('/')) path += 'index.html';
+  const filePath = resolve(root, '.' + path);
+  try {
+    const body = await readFile(filePath);
+    return new Response(body, { headers: { 'content-type': types[extname(filePath)] || 'application/octet-stream' } });
+  } catch {
+    return new Response('Not Found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  }
+}
+
+export default {
+  async fetch(request) {
+    return render(new URL(request.url).pathname);
+  },
+};`);
 }
 
 async function copyTree(sourceDir, targetDir) {
@@ -41,6 +79,7 @@ async function copyTree(sourceDir, targetDir) {
     if (entry.isDirectory()) {
       await copyTree(sourcePath, targetPath);
     } else if (entry.isFile()) {
+      await mkdir(dirname(targetPath), { recursive: true });
       await copyFile(sourcePath, targetPath);
     }
   }
