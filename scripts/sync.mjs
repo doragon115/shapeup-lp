@@ -5,7 +5,8 @@
 //   node scripts/sync.mjs --force   # 差分が無くても再生成
 //
 // 「変化があった時だけ生成・コミット」= 無投稿日は何もしない（要件2・6・10）。
-import { appendFile } from 'node:fs/promises';
+import { appendFile, copyFile, mkdir, readdir, rm } from 'node:fs/promises';
+import { join } from 'node:path';
 import { loadJson, saveJson, contentSignature } from './lib.mjs';
 import { fetchPosts } from './fetch-instagram.mjs';
 import { buildSite } from './build-site.mjs';
@@ -26,6 +27,25 @@ async function setActionOutput(key, value) {
   }
 }
 
+async function mirrorPublicToDist() {
+  await rm('dist', { recursive: true, force: true });
+  await copyTree('public', 'dist');
+}
+
+async function copyTree(sourceDir, targetDir) {
+  await mkdir(targetDir, { recursive: true });
+  const entries = await readdir(sourceDir, { withFileTypes: true });
+  for (const entry of entries) {
+    const sourcePath = join(sourceDir, entry.name);
+    const targetPath = join(targetDir, entry.name);
+    if (entry.isDirectory()) {
+      await copyTree(sourcePath, targetPath);
+    } else if (entry.isFile()) {
+      await copyFile(sourcePath, targetPath);
+    }
+  }
+}
+
 async function main() {
   const config = await loadJson('config.json');
   const prefectures = await loadPrefectures();
@@ -40,6 +60,7 @@ async function main() {
 
   const changed = force || siteSignature !== prev.siteSignature || contentSignature(posts) !== contentSignature(prevPosts);
   if (!changed) {
+    await mirrorPublicToDist();
     console.log('[sync] no changes detected — skip build/deploy.');
     await setActionOutput('changed', 'false');
     return;
@@ -69,6 +90,8 @@ async function main() {
 
   const idx = await submitIndexNow({ config, urls: [...changedUrls] });
   console.log(`[sync] indexnow: ${idx.sent ? 'sent' : 'skipped(' + idx.reason + ')'} urls=${idx.urls.length}`);
+
+  await mirrorPublicToDist();
 
   await setActionOutput('changed', 'true');
   console.log('[sync] done. Files under public/ updated.');
