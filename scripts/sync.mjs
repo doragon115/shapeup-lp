@@ -32,22 +32,23 @@ async function mirrorPublicToDist() {
   await mkdir('dist/.openai', { recursive: true });
   await mkdir('dist/server', { recursive: true });
   await writeText('dist/.openai/hosting.json', JSON.stringify(await loadJson('.openai/hosting.json'), null, 2) + '\n');
-  await writeText('dist/server/index.js', `const HTML_FALLBACKS = ['/index.html'];
+  await writeText('dist/server/index.js', `const ROOT_CANDIDATES = ['', '/dist'];
 
 function candidatesFor(pathname) {
-  if (pathname === '/') return HTML_FALLBACKS;
-  const paths = [pathname];
-  if (!pathname.endsWith('/')) paths.push(\`\${pathname}/index.html\`);
-  if (!pathname.endsWith('.html')) paths.push(\`\${pathname}.html\`);
+  const paths = pathname === '/'
+    ? ['/index.html']
+    : [pathname, pathname.endsWith('/') ? \`\${pathname}index.html\` : \`\${pathname}/index.html\`, pathname.endsWith('.html') ? pathname : \`\${pathname}.html\`];
   return paths;
 }
 
 async function fetchAsset(env, requestUrl, pathname) {
-  for (const candidate of candidatesFor(pathname)) {
-    const response = await env.ASSETS.fetch(new Request(new URL(candidate, requestUrl)));
-    if (response.status !== 404) return response;
+  for (const prefix of ROOT_CANDIDATES) {
+    for (const candidate of candidatesFor(pathname)) {
+      const response = await env.ASSETS.fetch(new Request(new URL(\`\${prefix}\${candidate}\`, requestUrl)));
+      if (response.status !== 404) return response;
+    }
   }
-  return env.ASSETS.fetch(new Request(new URL('/index.html', requestUrl)));
+  return new Response('Not Found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
 }
 
 export default {
