@@ -32,53 +32,27 @@ async function mirrorPublicToDist() {
   await mkdir('dist/.openai', { recursive: true });
   await mkdir('dist/server', { recursive: true });
   await writeText('dist/.openai/hosting.json', JSON.stringify(await loadJson('.openai/hosting.json'), null, 2) + '\n');
-  await writeText('dist/server/index.js', `import { existsSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
-import { extname, resolve } from 'node:path';
+  await writeText('dist/server/index.js', `const HTML_FALLBACKS = ['/index.html'];
 
-const types = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.xml': 'application/xml; charset=utf-8',
-  '.txt': 'text/plain; charset=utf-8',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.svg': 'image/svg+xml',
-};
-
-function resolveRoot() {
-  const cwd = process.cwd();
-  const candidates = [
-    cwd,
-    resolve(cwd, 'dist'),
-    resolve(cwd, '..', 'dist'),
-    resolve(cwd, '..'),
-    resolve(cwd, '..', '..', 'dist'),
-  ];
-  return candidates.find((candidate) => existsSync(resolve(candidate, 'index.html'))) ?? cwd;
+function candidatesFor(pathname) {
+  if (pathname === '/') return HTML_FALLBACKS;
+  const paths = [pathname];
+  if (!pathname.endsWith('/')) paths.push(\`\${pathname}/index.html\`);
+  if (!pathname.endsWith('.html')) paths.push(\`\${pathname}.html\`);
+  return paths;
 }
 
-const root = resolveRoot();
-
-async function render(pathname) {
-  let path = pathname === '/' ? '/index.html' : pathname;
-  if (path.endsWith('/')) path += 'index.html';
-  const filePath = resolve(root, '.' + path);
-  try {
-    const body = await readFile(filePath);
-    return new Response(body, { headers: { 'content-type': types[extname(filePath)] || 'application/octet-stream' } });
-  } catch {
-    return new Response('Not Found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+async function fetchAsset(env, requestUrl, pathname) {
+  for (const candidate of candidatesFor(pathname)) {
+    const response = await env.ASSETS.fetch(new Request(new URL(candidate, requestUrl)));
+    if (response.status !== 404) return response;
   }
+  return env.ASSETS.fetch(new Request(new URL('/index.html', requestUrl)));
 }
 
 export default {
-  async fetch(request) {
-    return render(new URL(request.url).pathname);
+  async fetch(request, env) {
+    return fetchAsset(env, request.url, new URL(request.url).pathname);
   },
 };`);
 }
