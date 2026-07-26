@@ -201,3 +201,14 @@ test('公開許可を明示した場合だけ検索登録できる設定にな�
     await buildSite({ posts: [], config, prefectures: rows });
   }
 });
+
+test('Google Search Consoleの所有権確認ファイルを公開する', async () => {
+  const verification = await readFile(
+    resolve(ROOT, 'public/google78dd5e33ad64202c.html'),
+    'utf8',
+  );
+  assert.equal(
+    verification,
+    'google-site-verification: google78dd5e33ad64202c.html\n',
+  );
+});
