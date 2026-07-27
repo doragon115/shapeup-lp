@@ -24,8 +24,6 @@
     "profileUrl": "https://www.threads.com/@universityshapeup"
   },
   "cta": {
-    "zoomSeminarUrl": "https://example.com/zoom-seminar",
-    "zoomSeminarLabel": "無料Zoom説明会に申し込む",
     "lineUrl": "https://line.me/R/ti/p/@dpi4359e",
     "lineLabel": "公式LINEに登録して無料PDFを受け取る",
     "lineBenefit": "更年期からの食べ方を見直すヒント"
@@ -56,8 +54,8 @@
     ]
   },
   "_notes": [
-    "baseUrl は本番ドメインに差し替えてください（Cloudflare Pagesの独自ドメイン or *.pages.dev）。",
-    "cta.zoomSeminarUrl / lineUrl は実際のURLに差し替えてください。",
+    "baseUrl は本番ドメイン shapeup-university.pages.dev に確定済み。",
+    "説明会の申込導線は公式LINEに一本化。Zoom URLは掲載しない方針。",
     "indexnow.enabled は本番デプロイ後に true にします。キー自体は環境変数 INDEXNOW_KEY で渡し、ここには書きません。"
   ]
 }
