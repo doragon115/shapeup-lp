@@ -81,13 +81,58 @@ test('全都道府県ページに対応する16:9地域画像がある', async (
   await buildSite({ posts: [], config, prefectures: rows });
 
   for (const row of rows) {
-    const imagePath = resolve(ROOT, `public/images/prefectures/${row.slug}_lp_16x9.png`);
-    assert.ok(existsSync(imagePath), `${row.name}の画像が必要です`);
+    for (const width of [640, 1280]) {
+      const imagePath = resolve(ROOT, `public/images/prefectures/${row.slug}_lp_16x9-${width}.webp`);
+      assert.ok(existsSync(imagePath), `${row.name}の画像（幅${width}）が必要です`);
+    }
     const html = await readFile(resolve(ROOT, `public/area/${row.slug}/index.html`), 'utf8');
-    assert.match(html, new RegExp(`/images/prefectures/${row.slug}_lp_16x9\\.png`));
+    assert.match(html, new RegExp(`/images/prefectures/${row.slug}_lp_16x9-640\\.webp 640w`));
+    assert.match(html, new RegExp(`/images/prefectures/${row.slug}_lp_16x9-1280\\.webp 1280w`));
     assert.match(html, new RegExp(`alt="${row.name}の地域イラスト"`));
     assert.match(html, new RegExp(`class="prefecture-hero-label">${row.name}にお住まいの50代女性へ`));
   }
+});
+
+test('ヒーロー画像はファーストビューに置かれ、大きさが先に決まっている', async () => {
+  const rows = await loadPrefectures();
+  const config = await loadJson('config.json');
+  await buildSite({ posts: [], config, prefectures: rows });
+
+  const tokyo = await readFile(resolve(ROOT, 'public/area/tokyo/index.html'), 'utf8');
+  const hero = tokyo.match(/<header class="hero program-hero">([\s\S]*?)<\/header>/)?.[1] || '';
+  assert.match(hero, /class="prefecture-hero-image"/, 'ヒーロー画像はheader内にある');
+  assert.match(hero, /width="1280" height="720"/, 'CLS防止のため幅と高さを明示する');
+  assert.match(hero, /loading="eager"/);
+  assert.match(hero, /fetchpriority="high"/);
+  assert.match(tokyo, /<link rel="preload" as="image"[^>]*tokyo_lp_16x9-1280\.webp/);
+  assert.match(tokyo, /<meta property="og:image" content="[^"]*tokyo_lp_16x9-1280\.webp">/);
+});
+
+test('都道府県ページにパンくずと同じ地方への内部リンクがある', async () => {
+  const rows = await loadPrefectures();
+  const config = await loadJson('config.json');
+  await buildSite({ posts: [], config, prefectures: rows });
+
+  const tokyo = await readFile(resolve(ROOT, 'public/area/tokyo/index.html'), 'utf8');
+  assert.match(tokyo, /<nav class="breadcrumb wrap" aria-label="パンくずリスト">/);
+  assert.match(tokyo, /"@type":"BreadcrumbList"/);
+  assert.match(tokyo, /https:\/\/shapeup-university\.pages\.dev\/area\/tokyo\/"/);
+  // 関東の他県へのリンク（東京都以外の6県）
+  const kanto = rows.filter((row) => row.region === '関東' && row.slug !== 'tokyo');
+  assert.ok(kanto.length > 0);
+  for (const row of kanto) {
+    assert.match(tokyo, new RegExp(`<li><a href="/area/${row.slug}/">${row.name}</a></li>`));
+  }
+});
+
+test('sitemapの都道府県lastmodは確認日から決まる（ビルド時刻ではない）', async () => {
+  const rows = await loadPrefectures();
+  const config = await loadJson('config.json');
+  await buildSite({ posts: [], config, prefectures: rows });
+
+  const sitemap = await readFile(resolve(ROOT, 'public/sitemap.xml'), 'utf8');
+  const tokyoEntry = sitemap.match(/<loc>[^<]*\/area\/tokyo\/<\/loc><lastmod>([^<]+)<\/lastmod>/)?.[1];
+  assert.equal(tokyoEntry, '2026-07-20T00:00:00.000Z');
 });
 
 test('公開許可済みなら47都道府県ページは検索対象になる', async () => {
