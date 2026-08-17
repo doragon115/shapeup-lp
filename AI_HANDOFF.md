@@ -10,6 +10,7 @@
   - 画像変換は `scripts/optimize-images.mjs`。`cwebp` 品質76。
   - SEO: h1に県名、パンくず（HTML＋BreadcrumbList JSON-LD）、og:image、同一地方の相互リンク、sitemap lastmodを内容ベースへ。
   - デザインは `scripts/build-site.mjs` の `STYLES` 定数1箇所に集約。ここを直せば48ページに反映される。
+- 2026-08-17、`public/404.html` と `public/llms.txt` を生成対象に追加（`25b2ad0`）。存在しないURLがトップのHTMLを200で返すソフト404を解消した。本番で `/zzz-not-exist` が404、`/llms.txt` が `text/plain` を返すことを確認済み。404ページは `noindex,nofollow` でsitemapには載せない。
 - `npm run preview` はNode v24で起動しない（`--experimental-default-type=module` が削除済み）。`node scripts/serve.mjs` を直接叩く。デザイン刷新とは無関係の既存問題。
 - 47都道府県LPはCloudflare Pagesで公開中: https://shapeup-university.pages.dev/
 - `publishing.ready` は `true`。トップ、地域一覧、47都道府県ページは `index,follow`。
