@@ -1,0 +1,68 @@
+# シェイプアップ大学
+
+> たんぱく質を意識しながら、続けやすい食習慣づくりを学ぶオンラインの学校です。説明会のご案内は公式LINEでお届けします。
+
+たんぱく質を意識した食事と、続けやすい食習慣づくりを学ぶオンラインの学校です。運動に頼らず、21日間で食習慣を見直す内容を、50代女性を中心にお届けしています。
+
+## 主要ページ
+
+- [トップページ](https://shapeup-university.pages.dev/): 講座の概要と最新のお知らせ
+- [47都道府県から探す](https://shapeup-university.pages.dev/area/): お住まいの地域の案内ページ一覧
+- [特定商取引法に基づく表記](https://shapeup-university.pages.dev/tokusho/): 運営者情報と取引条件
+- [プライバシーポリシー](https://shapeup-university.pages.dev/privacy/): 個人情報の取り扱い
+
+## 地域別ページ
+
+- [北海道](https://shapeup-university.pages.dev/area/hokkaido/): 北海道にお住まいの50代女性向けの案内
+- [青森県](https://shapeup-university.pages.dev/area/aomori/): 青森県にお住まいの50代女性向けの案内
+- [岩手県](https://shapeup-university.pages.dev/area/iwate/): 岩手県にお住まいの50代女性向けの案内
+- [宮城県](https://shapeup-university.pages.dev/area/miyagi/): 宮城県にお住まいの50代女性向けの案内
+- [秋田県](https://shapeup-university.pages.dev/area/akita/): 秋田県にお住まいの50代女性向けの案内
+- [山形県](https://shapeup-university.pages.dev/area/yamagata/): 山形県にお住まいの50代女性向けの案内
+- [福島県](https://shapeup-university.pages.dev/area/fukushima/): 福島県にお住まいの50代女性向けの案内
+- [茨城県](https://shapeup-university.pages.dev/area/ibaraki/): 茨城県にお住まいの50代女性向けの案内
+- [栃木県](https://shapeup-university.pages.dev/area/tochigi/): 栃木県にお住まいの50代女性向けの案内
+- [群馬県](https://shapeup-university.pages.dev/area/gunma/): 群馬県にお住まいの50代女性向けの案内
+- [埼玉県](https://shapeup-university.pages.dev/area/saitama/): 埼玉県にお住まいの50代女性向けの案内
+- [千葉県](https://shapeup-university.pages.dev/area/chiba/): 千葉県にお住まいの50代女性向けの案内
+- [東京都](https://shapeup-university.pages.dev/area/tokyo/): 東京都にお住まいの50代女性向けの案内
+- [神奈川県](https://shapeup-university.pages.dev/area/kanagawa/): 神奈川県にお住まいの50代女性向けの案内
+- [新潟県](https://shapeup-university.pages.dev/area/niigata/): 新潟県にお住まいの50代女性向けの案内
+- [富山県](https://shapeup-university.pages.dev/area/toyama/): 富山県にお住まいの50代女性向けの案内
+- [石川県](https://shapeup-university.pages.dev/area/ishikawa/): 石川県にお住まいの50代女性向けの案内
+- [福井県](https://shapeup-university.pages.dev/area/fukui/): 福井県にお住まいの50代女性向けの案内
+- [山梨県](https://shapeup-university.pages.dev/area/yamanashi/): 山梨県にお住まいの50代女性向けの案内
+- [長野県](https://shapeup-university.pages.dev/area/nagano/): 長野県にお住まいの50代女性向けの案内
+- [岐阜県](https://shapeup-university.pages.dev/area/gifu/): 岐阜県にお住まいの50代女性向けの案内
+- [静岡県](https://shapeup-university.pages.dev/area/shizuoka/): 静岡県にお住まいの50代女性向けの案内
+- [愛知県](https://shapeup-university.pages.dev/area/aichi/): 愛知県にお住まいの50代女性向けの案内
+- [三重県](https://shapeup-university.pages.dev/area/mie/): 三重県にお住まいの50代女性向けの案内
+- [滋賀県](https://shapeup-university.pages.dev/area/shiga/): 滋賀県にお住まいの50代女性向けの案内
+- [京都府](https://shapeup-university.pages.dev/area/kyoto/): 京都府にお住まいの50代女性向けの案内
+- [大阪府](https://shapeup-university.pages.dev/area/osaka/): 大阪府にお住まいの50代女性向けの案内
+- [兵庫県](https://shapeup-university.pages.dev/area/hyogo/): 兵庫県にお住まいの50代女性向けの案内
+- [奈良県](https://shapeup-university.pages.dev/area/nara/): 奈良県にお住まいの50代女性向けの案内
+- [和歌山県](https://shapeup-university.pages.dev/area/wakayama/): 和歌山県にお住まいの50代女性向けの案内
+- [鳥取県](https://shapeup-university.pages.dev/area/tottori/): 鳥取県にお住まいの50代女性向けの案内
+- [島根県](https://shapeup-university.pages.dev/area/shimane/): 島根県にお住まいの50代女性向けの案内
+- [岡山県](https://shapeup-university.pages.dev/area/okayama/): 岡山県にお住まいの50代女性向けの案内
+- [広島県](https://shapeup-university.pages.dev/area/hiroshima/): 広島県にお住まいの50代女性向けの案内
+- [山口県](https://shapeup-university.pages.dev/area/yamaguchi/): 山口県にお住まいの50代女性向けの案内
+- [徳島県](https://shapeup-university.pages.dev/area/tokushima/): 徳島県にお住まいの50代女性向けの案内
+- [香川県](https://shapeup-university.pages.dev/area/kagawa/): 香川県にお住まいの50代女性向けの案内
+- [愛媛県](https://shapeup-university.pages.dev/area/ehime/): 愛媛県にお住まいの50代女性向けの案内
+- [高知県](https://shapeup-university.pages.dev/area/kochi/): 高知県にお住まいの50代女性向けの案内
+- [福岡県](https://shapeup-university.pages.dev/area/fukuoka/): 福岡県にお住まいの50代女性向けの案内
+- [佐賀県](https://shapeup-university.pages.dev/area/saga/): 佐賀県にお住まいの50代女性向けの案内
+- [長崎県](https://shapeup-university.pages.dev/area/nagasaki/): 長崎県にお住まいの50代女性向けの案内
+- [熊本県](https://shapeup-university.pages.dev/area/kumamoto/): 熊本県にお住まいの50代女性向けの案内
+- [大分県](https://shapeup-university.pages.dev/area/oita/): 大分県にお住まいの50代女性向けの案内
+- [宮崎県](https://shapeup-university.pages.dev/area/miyazaki/): 宮崎県にお住まいの50代女性向けの案内
+- [鹿児島県](https://shapeup-university.pages.dev/area/kagoshima/): 鹿児島県にお住まいの50代女性向けの案内
+- [沖縄県](https://shapeup-university.pages.dev/area/okinawa/): 沖縄県にお住まいの50代女性向けの案内
+
+## 補足
+
+- 説明会や個別のご案内は公式LINEでお届けしています。
+- サイトマップ: https://shapeup-university.pages.dev/sitemap.xml
+- 更新情報（RSS）: https://shapeup-university.pages.dev/feed.xml

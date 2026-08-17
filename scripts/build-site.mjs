@@ -353,6 +353,68 @@ function siteFooter(config) {
 </footer>`;
 }
 
+/* Cloudflare Pages は 404.html があればそれを404ステータスで返す。
+   無いと存在しないURLにトップのHTMLを200で返してしまい、ソフト404になる。 */
+function notFoundPage({ config, base, hasPrefectures }) {
+  return layout({
+    title: `ページが見つかりません｜${config.site.name}`,
+    description: 'お探しのページは移動または削除された可能性があります。',
+    canonical: `${base}/404.html`,
+    robots: 'noindex,nofollow',
+    body: `<header class="hero program-hero">
+  ${siteBar(config)}
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">404</p>
+        <h1 class="program-headline">お探しのページが見つかりません</h1>
+        <p class="proof-line">アドレスが変わったか、削除された可能性があります。下のリンクからお進みください。</p>
+        <p class="hero-action"><a class="btn" href="/">トップページへ戻る</a></p>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section>
+    <div class="local-note">
+      <p><a href="/">トップページ</a></p>
+      ${hasPrefectures ? '<p><a href="/area/">47都道府県から探す</a></p>' : ''}
+      <p><a href="${escapeHtml(config.cta.lineUrl)}" target="_blank" rel="noopener">公式LINEで相談する</a></p>
+    </div>
+  </section>
+</main>
+${siteFooter(config)}`,
+  });
+}
+
+/* llms.txt はAIクローラー向けの案内。H1とリンクを含むMarkdownであることが要件。 */
+function llmsTxt({ config, base, prefectures }) {
+  const areaLines = prefectures.map((p) => `- [${p.name}](${base}/area/${p.slug}/): ${p.name}にお住まいの50代女性向けの案内`);
+  return `# ${config.site.name}
+
+> ${config.site.description}
+
+たんぱく質を意識した食事と、続けやすい食習慣づくりを学ぶオンラインの学校です。運動に頼らず、21日間で食習慣を見直す内容を、50代女性を中心にお届けしています。
+
+## 主要ページ
+
+- [トップページ](${base}/): 講座の概要と最新のお知らせ
+${prefectures.length ? `- [47都道府県から探す](${base}/area/): お住まいの地域の案内ページ一覧` : ''}
+- [特定商取引法に基づく表記](${base}/tokusho/): 運営者情報と取引条件
+- [プライバシーポリシー](${base}/privacy/): 個人情報の取り扱い
+
+## 地域別ページ
+
+${areaLines.join('\n')}
+
+## 補足
+
+- 説明会や個別のご案内は公式LINEでお届けしています。
+- サイトマップ: ${base}/sitemap.xml
+- 更新情報（RSS）: ${base}/feed.xml
+`;
+}
+
 function legalPageShell({ config, base, title, description, heading, body, canonicalPath }) {
   const canonical = `${base}${canonicalPath}`;
   const isPreview = config.publishing?.ready !== true;
@@ -801,6 +863,12 @@ ${posts.map((p) => `  <item>
 
   // ---- robots.txt ----
   await writeText('public/robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${base}/sitemap.xml\n`);
+
+  // ---- 404.html（sitemapには載せない） ----
+  await writeText('public/404.html', notFoundPage({ config, base, hasPrefectures: prefectures.length > 0 }));
+
+  // ---- llms.txt ----
+  await writeText('public/llms.txt', llmsTxt({ config, base, prefectures }));
 
   return { written, sitemapUrls: urls.map((u) => u.loc) };
 }
