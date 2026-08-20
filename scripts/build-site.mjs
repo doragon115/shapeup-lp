@@ -59,7 +59,7 @@ a:hover{color:var(--blue);}
 .wrap{max-width:1080px;margin:0 auto;padding:0 22px;}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 main section{padding:64px 0;}
-h2{margin:0 0 20px;font-size:clamp(20px,2.5vw,28px);font-weight:800;line-height:1.55;letter-spacing:.01em;}
+h2{margin:0 0 20px;font-size:clamp(20px,2.5vw,28px);font-weight:800;line-height:1.55;letter-spacing:.01em;word-break:auto-phrase;}
 h2 span{display:inline-block;padding-bottom:7px;border-bottom:3px solid var(--blue);}
 .eyebrow{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--blue-deep);}
 
@@ -80,11 +80,11 @@ h2 span{display:inline-block;padding-bottom:7px;border-bottom:3px solid var(--bl
 .hero-grid{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:clamp(26px,4vw,52px);align-items:center;padding:clamp(28px,4.4vw,60px) 0 clamp(36px,5vw,64px);}
 .hero-copy{min-width:0;}
 .hero-eyebrow{margin:0 0 12px;font-size:13px;font-weight:800;letter-spacing:.14em;color:var(--blue-deep);}
-.program-headline{margin:0;font-size:clamp(26px,3.4vw,40px);font-weight:800;line-height:1.45;text-wrap:balance;}
+.program-headline{margin:0;font-size:clamp(26px,3.4vw,40px);font-weight:800;line-height:1.45;text-wrap:balance;word-break:auto-phrase;}
 .headline-place{display:block;margin-bottom:9px;font-family:"Hiragino Mincho ProN","Yu Mincho",serif;font-size:clamp(17px,2vw,22px);font-weight:600;letter-spacing:.12em;color:var(--blue-deep);}
 .program-headline mark{background:transparent;color:inherit;padding:0 .05em;box-shadow:inset 0 -.34em 0 rgba(43,166,223,.24);box-decoration-break:clone;-webkit-box-decoration-break:clone;}
 .no-break{white-space:nowrap;}
-.proof-line{margin:20px 0 0;max-width:32em;font-size:clamp(14px,1.6vw,16px);color:var(--ink-soft);}
+.proof-line{margin:20px 0 0;max-width:32em;text-wrap:pretty;word-break:auto-phrase;font-size:clamp(14px,1.6vw,16px);color:var(--ink-soft);}
 .hero-action{margin:26px 0 0;}
 .btn{display:inline-block;background:var(--cta);color:var(--ink);font-weight:800;text-decoration:none;padding:15px 26px;border:1px solid var(--cta-edge);border-radius:999px;box-shadow:0 3px 0 var(--cta-edge);}
 .btn:hover{color:var(--ink);transform:translateY(1px);box-shadow:0 2px 0 var(--cta-edge);}
@@ -100,11 +100,13 @@ h2 span{display:inline-block;padding-bottom:7px;border-bottom:3px solid var(--bl
 .home-gallery img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:var(--r);background:var(--blue-wash);}
 
 .promise-band{background:var(--blue-wash);border-bottom:1px solid var(--line);}
-.promise-list{display:grid;grid-template-columns:repeat(3,1fr);margin:0;padding:24px 0 0;list-style:none;}
-.promise-list li{padding:2px 20px;border-left:1px solid rgba(15,95,133,.18);font-size:15px;font-weight:700;}
+.promise-list{display:grid;grid-template-columns:repeat(3,1fr);margin:0;padding:26px 0 56px;list-style:none;counter-reset:promise;}
+.promise-list li{counter-increment:promise;padding:2px 20px;border-left:1px solid rgba(15,95,133,.18);font-size:15px;font-weight:700;}
+.promise-list li::before{content:counter(promise,decimal-leading-zero);display:block;margin-bottom:5px;font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--blue-deep);opacity:.6;}
 .promise-list li:first-child{border-left:0;padding-left:0;}
 /* 下パディングは次のセクションが重なる30px分を上乗せしてある。減らすと文字が隠れる。 */
-.hero-benefit{margin:0;padding:16px 0 56px;font-size:14px;color:var(--ink-soft);}
+.hero-benefit{margin:15px 0 0;font-size:14px;color:var(--ink-soft);}
+.hero-benefit b{margin-right:9px;padding:3px 10px;background:var(--surface);border:1px solid rgba(15,95,133,.22);border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--blue-deep);}
 
 .local-section{position:relative;z-index:1;margin-top:-30px;padding-top:38px!important;background:var(--paper);border-radius:var(--r) var(--r) 0 0;}
 .local-note{margin:0;padding:26px 28px;max-width:760px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:var(--r);font-size:17px;box-shadow:0 8px 24px rgba(23,49,63,.06);}
@@ -114,7 +116,7 @@ h2 span{display:inline-block;padding-bottom:7px;border-bottom:3px solid var(--bl
 .fact-list{margin:26px 0 0;padding:0;max-width:760px;list-style:none;}
 .fact-list li{position:relative;padding:14px 0 14px 26px;border-top:1px solid var(--line);}
 .fact-list li::before{content:"";position:absolute;left:0;top:27px;width:13px;height:2px;background:var(--blue);}
-.lead-text{max-width:34em;margin:0;color:var(--ink-soft);}
+.lead-text{max-width:34em;margin:0;color:var(--ink-soft);word-break:auto-phrase;}
 .protein-list{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 0;padding:0;list-style:none;}
 .protein-list li{padding:8px 17px;background:var(--surface);border:1px solid var(--line);border-radius:999px;font-size:15px;font-weight:700;}
 
@@ -177,7 +179,7 @@ footer .wrap{display:grid;gap:13px;}
 }
 @media (max-width:899px){
   .hero-grid{grid-template-columns:1fr;gap:24px;}
-  .promise-list{grid-template-columns:1fr;padding-top:18px;}
+  .promise-list{grid-template-columns:1fr;padding:18px 0 50px;}
   .promise-list li{padding:9px 0;border-left:0;border-top:1px solid rgba(15,95,133,.18);}
   .promise-list li:first-child{border-top:0;}
 }
@@ -187,6 +189,8 @@ footer .wrap{display:grid;gap:13px;}
   main section{padding:44px 0;}
   .local-section{margin-top:-22px;padding-top:30px!important;}
   .local-note{padding:22px 20px;}
+  .site-bar .official-links{display:none;}
+  .promise-list li::before{display:inline-block;margin:0 9px 0 0;}
   .btn{display:block;width:100%;text-align:center;padding:15px 16px;}
   .backlinks{display:grid;gap:10px;}
   .area-grid,.cards{grid-template-columns:1fr;}
@@ -301,7 +305,7 @@ function breadcrumbJsonLd(items, base) {
 
 function programHeadline(config, place = '') {
   const headline = escapeHtml(config.site.programHeadline)
-    .replace('21日間', '<mark class="no-break">21日間</mark>')
+    .replace('21日間', '<span class="no-break">21日間</span>')
     .replace('「続けやすい食習慣」', '<mark class="no-break">「続けやすい食習慣」</mark>');
   return place ? `<span class="headline-place">${escapeHtml(place)}</span>${headline}` : headline;
 }
@@ -326,6 +330,7 @@ function programHero({ config, place = '', eyebrow = '', figure = '', breadcrumb
         <h1 class="program-headline">${programHeadline(config, place)}</h1>
         <p class="proof-line">${escapeHtml(config.site.proofLine)}</p>
         <p class="hero-action"><a class="btn" href="${escapeHtml(config.cta.lineUrl)}" data-prefecture="${escapeHtml(prefectureSlug)}" data-channel="lp" data-cta="line-register">${escapeHtml(label)}</a></p>
+        <p class="hero-benefit"><b>LINE登録特典</b>${escapeHtml(config.cta.lineBenefit)}</p>
       </div>
       ${figure}
     </div>
@@ -338,7 +343,6 @@ function promiseBand(config) {
   return `<div class="promise-band">
   <div class="wrap">
     <ul class="promise-list"><li>21日間の集中プログラム</li><li>運動に頼らない</li><li>我慢を続けない食習慣</li></ul>
-    <p class="hero-benefit">LINE登録特典：${escapeHtml(config.cta.lineBenefit)}</p>
   </div>
 </div>`;
 }

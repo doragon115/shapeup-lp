@@ -159,7 +159,7 @@ test('全都道府県ページでサービス内容と公式アカウントが�
     assert.match(hero, /class="brand-name"[^>]*>シェイプアップ大学/);
     assert.match(hero, /21日間/);
     assert.match(hero, /続けやすい食習慣/);
-    assert.match(hero, /<mark class="no-break">21日間<\/mark>/);
+    assert.match(hero, /<span class="no-break">21日間<\/span>/);
     assert.match(hero, /<mark class="no-break">「続けやすい食習慣」<\/mark>/);
     assert.match(hero, /4,500人以上/);
     assert.match(hero, /https:\/\/www\.instagram\.com\/universityshapeup\//);
