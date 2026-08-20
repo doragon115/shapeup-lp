@@ -53,9 +53,14 @@
       "https://api.indexnow.org/indexnow"
     ]
   },
+  "webmcp": {
+    "enabled": true,
+    "originTrialToken": ""
+  },
   "_notes": [
     "baseUrl は本番ドメイン shapeup-university.pages.dev に確定済み。",
     "説明会の申込導線は公式LINEに一本化。Zoom URLは掲載しない方針。",
-    "indexnow.enabled は本番デプロイ後に true にします。キー自体は環境変数 INDEXNOW_KEY で渡し、ここには書きません。"
+    "indexnow.enabled は本番デプロイ後に true にします。キー自体は環境変数 INDEXNOW_KEY で渡し、ここには書きません。",
+    "webmcp はブラウザ内のAIエージェント向けにページの情報を渡す仕組み。originTrialToken は Chrome のオリジントライアル用で、空のままでも実装は入ります（Edge など対応済みのブラウザでは空でも動きます）。"
   ]
 }

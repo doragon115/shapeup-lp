@@ -199,7 +199,79 @@ footer .wrap{display:grid;gap:13px;}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
 `.trim();
 
-function layout({ title, description, canonical, jsonLd = null, body, ogImage, robots = 'index,follow', preloadImage = null }) {
+/**
+ * WebMCP。ページが持っている情報を、ブラウザの中で動くAIエージェントへ
+ * 「道具」として渡す仕組み。画面の見た目は一切変わらない。
+ * 対応していないブラウザでは何も起きない（Chrome/Edgeの一部のみ対応）。
+ * 仕様が navigator.modelContext から document.modelContext へ移る途中なので両方見る。
+ */
+let webmcpBase = null;
+
+/** Chromeのオリジントライアル用。config.jsonにトークンを入れたときだけ出す。 */
+function webmcpMeta() {
+  const token = webmcpBase?.token;
+  return token ? `\n<meta http-equiv="origin-trial" content="${escapeHtml(token)}">` : '';
+}
+
+const WEBMCP_SCRIPT = `
+(function(){
+  var host=document.getElementById('webmcp-data');
+  var ctx=document.modelContext||navigator.modelContext;
+  if(!host||!ctx)return;
+  var d;try{d=JSON.parse(host.textContent);}catch(e){return;}
+  var reply=function(v){return{content:[{type:'text',text:JSON.stringify(v)}]};};
+  var tools=[
+    {
+      name:'get_program_overview',
+      description:'シェイプアップ大学の21日間プログラムの概要と、公式LINEの登録先・登録特典を返す。プログラムの内容や申し込み先を聞かれたときに使う。',
+      inputSchema:{type:'object',properties:{}},
+      execute:function(){return reply(d.site);}
+    },
+    {
+      name:'find_prefecture_page',
+      description:'都道府県名から、その地域向けページのURLを返す。地名の一部だけでも探せる。名前を渡さなければ47件すべてを返す。',
+      inputSchema:{type:'object',properties:{name:{type:'string',description:'都道府県名。例: 東京、大阪府、北海道'}}},
+      execute:function(a){
+        var q=((a&&a.name)||'').trim();
+        var list=d.prefectures.map(function(p){return{name:p.name,region:p.region,url:d.site.baseUrl+'/area/'+p.slug+'/'};});
+        if(!q)return reply({count:list.length,prefectures:list});
+        var bare=function(s){return s.replace(/[都道府県]$/,'');};
+        var hit=list.filter(function(p){return p.name.indexOf(q)>=0||bare(q)===bare(p.name);});
+        return reply(hit.length?{matches:hit}:{matches:[],hint:'見つかりませんでした。nameを省いて呼ぶと47件すべてが返ります。'});
+      }
+    }
+  ];
+  if(d.page&&d.page.type==='prefecture'){
+    tools.push({
+      name:'get_local_guidance',
+      description:'いま開いている都道府県の、気候と食文化に合わせた食習慣のアドバイスと、その根拠になった出典を返す。',
+      inputSchema:{type:'object',properties:{}},
+      execute:function(){return reply(d.page);}
+    });
+  }
+  if(typeof ctx.registerTool==='function'){
+    tools.forEach(function(t){try{ctx.registerTool(t);}catch(e){}});
+  }else if(typeof ctx.provideContext==='function'){
+    try{ctx.provideContext({tools:tools});}catch(e){}
+  }
+})();
+`.trim();
+
+/** ページ末尾に置くWebMCPのデータとツール登録。JSONの < は閉じタグ対策で潰す。 */
+function webmcpBlock(page) {
+  if (!webmcpBase) return '';
+  const payload = {
+    site: webmcpBase.site,
+    prefectures: webmcpBase.prefectures,
+    page: page || { type: 'other' },
+  };
+  const data = JSON.stringify(payload).replace(/</g, '\\u003c');
+  return `
+<script type="application/json" id="webmcp-data">${data}</script>
+<script>${WEBMCP_SCRIPT}</script>`;
+}
+
+function layout({ title, description, canonical, jsonLd = null, body, ogImage, robots = 'index,follow', preloadImage = null, webmcpPage = null }) {
   const ld = jsonLd ? `\n<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : '';
   const preload = preloadImage
     ? `\n<link rel="preload" as="image" href="${preloadImage.src}" imagesrcset="${preloadImage.srcset}" imagesizes="${preloadImage.sizes}" fetchpriority="high">`
@@ -212,7 +284,7 @@ function layout({ title, description, canonical, jsonLd = null, body, ogImage, r
 <title>${escapeHtml(title)}</title>
 <meta name="description" content="${escapeHtml(description)}">
 <meta name="robots" content="${escapeHtml(robots)}">
-<meta name="theme-color" content="${BRAND.blueDeep}">
+<meta name="theme-color" content="${BRAND.blueDeep}">${webmcpMeta()}
 <link rel="canonical" href="${escapeHtml(canonical)}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${escapeHtml(title)}">
@@ -227,7 +299,7 @@ ${STYLES}
 </style>${ld}
 </head>
 <body>
-${body}
+${body}${webmcpBlock(webmcpPage)}
 </body>
 </html>
 `;
@@ -365,6 +437,7 @@ function notFoundPage({ config, base, hasPrefectures }) {
     description: 'お探しのページは移動または削除された可能性があります。',
     canonical: `${base}/404.html`,
     robots: 'noindex,nofollow',
+    webmcpPage: { type: 'not-found', url: `${base}/404.html` },
     body: `<header class="hero program-hero">
   ${siteBar(config)}
   <div class="wrap">
@@ -431,6 +504,7 @@ function legalPageShell({ config, base, title, description, heading, body, canon
     description,
     canonical,
     robots: isPreview ? 'noindex,nofollow' : 'index,follow',
+    webmcpPage: { type: 'legal', name: title, url: canonical },
     jsonLd: {
       '@context': 'https://schema.org',
       '@graph': [
@@ -563,6 +637,7 @@ ${siteFooter(config)}`;
     description: '50代女性のための、気候と食文化に合わせた47都道府県別食習慣ガイドです。',
     canonical: `${base}/area/`,
     robots: isPreview ? 'noindex,nofollow' : 'index,follow',
+    webmcpPage: { type: 'prefecture-index', url: `${base}/area/` },
     ogImage: gallery.length ? `${base}${heroSrc(gallery[0].slug)}` : undefined,
     jsonLd: {
       '@context': 'https://schema.org',
@@ -650,6 +725,21 @@ ${siteFooter(config)}`;
     robots: isPreview ? 'noindex,nofollow' : 'index,follow',
     ogImage: `${base}${heroSrc(prefecture.slug)}`,
     preloadImage: { src: heroSrc(prefecture.slug), srcset: heroSrcset(prefecture.slug), sizes: HERO_IMAGE_SIZES },
+    webmcpPage: {
+      type: 'prefecture',
+      name: prefecture.name,
+      region: prefecture.region,
+      url: canonical,
+      lead: prefecture.lead,
+      message: prefecture.localMessage,
+      proteinExamples: prefecture.proteinExamples,
+      facts: prefecture.localFacts.map((fact) => ({
+        text: fact.text,
+        source: fact.sourceName,
+        sourceUrl: fact.sourceUrl,
+        checkedAt: fact.checkedAt,
+      })),
+    },
     jsonLd: {
       '@context': 'https://schema.org',
       '@graph': [
@@ -677,6 +767,23 @@ function prefectureLastmod(prefecture) {
 export async function buildSite({ posts, config, prefectures = [] }) {
   const base = config.site.baseUrl.replace(/\/$/, '');
   const written = [];
+  webmcpBase = config.webmcp?.enabled === false ? null : {
+    token: config.webmcp?.originTrialToken || '',
+    site: {
+      name: config.site.name,
+      tagline: config.site.tagline,
+      program: config.site.programHeadline,
+      proof: config.site.proofLine,
+      description: config.site.description,
+      audience: '50代を中心とした女性',
+      duration: '21日間',
+      lineUrl: config.cta.lineUrl,
+      lineLabel: config.cta.lineLabel,
+      lineBenefit: config.cta.lineBenefit,
+      baseUrl: base,
+    },
+    prefectures: prefectures.map((row) => ({ name: row.name, slug: row.slug, region: row.region })),
+  };
   const lineSeminarLabel = '公式LINEで説明会の案内を受け取る';
 
   const byRegion = new Map();
@@ -734,6 +841,7 @@ ${siteFooter(config)}`;
     description: config.site.description,
     canonical: `${base}/`,
     ogImage: latest[0]?.image || (gallery.length ? `${base}${heroSrc(gallery[1].slug)}` : undefined),
+    webmcpPage: { type: 'top', url: `${base}/` },
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'Organization',
@@ -807,6 +915,7 @@ ${siteFooter(config)}`;
       description: post.summary.slice(0, 120),
       canonical,
       ogImage: post.image,
+      webmcpPage: { type: 'update', name: post.title, url: canonical },
       jsonLd,
       body,
     }));

@@ -257,3 +257,69 @@ test('Google Search Consoleの所有権確認ファイルを公開する', async
     'google-site-verification: google78dd5e33ad64202c.html\n',
   );
 });
+
+/** ページのHTMLからWebMCPの部分を取り出し、対応ブラウザのふりをして動かす。 */
+function runWebmcp(html) {
+  const data = html.match(/<script type="application\/json" id="webmcp-data">([\s\S]*?)<\/script>/);
+  const code = html.match(/<script>\((function\(\)\{[\s\S]*?)\)\(\);<\/script>\s*<\/body>/);
+  assert.ok(data, 'webmcp-data が見つかりません');
+  assert.ok(code, 'WebMCP のスクリプトが見つかりません');
+
+  const registered = [];
+  const doc = {
+    getElementById: (id) => (id === 'webmcp-data' ? { textContent: data[1] } : null),
+    modelContext: { registerTool: (tool) => registered.push(tool) },
+  };
+  new Function('document', 'navigator', `(${code[1]})();`)(doc, {});
+
+  const call = async (name, args) => {
+    const tool = registered.find((item) => item.name === name);
+    assert.ok(tool, `${name} が登録されていません`);
+    return JSON.parse((await tool.execute(args)).content[0].text);
+  };
+  return { names: registered.map((tool) => tool.name), call };
+}
+
+test('全ページにWebMCPを載せ、対応ブラウザだけで道具として使える', async () => {
+  const rows = await loadPrefectures();
+  const config = await loadJson('config.json');
+  await buildSite({ posts: [], config, prefectures: rows });
+
+  const pages = [
+    'public/index.html',
+    'public/404.html',
+    'public/area/index.html',
+    'public/tokusho/index.html',
+    ...rows.map((row) => `public/area/${row.slug}/index.html`),
+  ];
+  for (const page of pages) {
+    const html = await readFile(resolve(ROOT, page), 'utf8');
+    assert.match(html, /id="webmcp-data"/, `${page} にWebMCPがありません`);
+  }
+
+  const tokyo = runWebmcp(await readFile(resolve(ROOT, 'public/area/tokyo/index.html'), 'utf8'));
+  assert.deepEqual(tokyo.names, ['get_program_overview', 'find_prefecture_page', 'get_local_guidance']);
+
+  const overview = await tokyo.call('get_program_overview', {});
+  assert.equal(overview.lineUrl, config.cta.lineUrl);
+
+  const osaka = await tokyo.call('find_prefecture_page', { name: '大阪' });
+  assert.equal(osaka.matches[0].url, `${config.site.baseUrl}/area/osaka/`);
+  assert.equal((await tokyo.call('find_prefecture_page', {})).count, 47);
+  assert.equal((await tokyo.call('find_prefecture_page', { name: '架空県' })).matches.length, 0);
+
+  const guidance = await tokyo.call('get_local_guidance', {});
+  assert.equal(guidance.name, '東京都');
+  assert.equal(guidance.facts.length, 3);
+
+  // 都道府県ページ以外に地域アドバイスは載せない。
+  const top = runWebmcp(await readFile(resolve(ROOT, 'public/index.html'), 'utf8'));
+  assert.deepEqual(top.names, ['get_program_overview', 'find_prefecture_page']);
+});
+
+test('WebMCP非対応のブラウザでは何も起きない', async () => {
+  const html = await readFile(resolve(ROOT, 'public/area/tokyo/index.html'), 'utf8');
+  const code = html.match(/<script>\((function\(\)\{[\s\S]*?)\)\(\);<\/script>\s*<\/body>/);
+  const doc = { getElementById: () => ({ textContent: '{}' }) };
+  assert.doesNotThrow(() => new Function('document', 'navigator', `(${code[1]})();`)(doc, {}));
+});

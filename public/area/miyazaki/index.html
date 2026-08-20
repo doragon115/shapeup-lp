@@ -278,5 +278,47 @@ footer .wrap{display:grid;gap:13px;}
 </nav>
   </div>
 </footer>
+<script type="application/json" id="webmcp-data">{"site":{"name":"シェイプアップ大学","tagline":"がまんしないダイエットの学校","program":"運動に頼らず、21日間で「続けやすい食習慣」を見直す","proof":"4,500人以上が学んだ、50代女性のための食習慣の学校","description":"たんぱく質を意識しながら、続けやすい食習慣づくりを学ぶオンラインの学校です。説明会のご案内は公式LINEでお届けします。","audience":"50代を中心とした女性","duration":"21日間","lineUrl":"https://line.me/R/ti/p/@dpi4359e","lineLabel":"公式LINEに登録して無料PDFを受け取る","lineBenefit":"更年期からの食べ方を見直すヒント","baseUrl":"https://shapeup-university.pages.dev"},"prefectures":[{"name":"北海道","slug":"hokkaido","region":"北海道"},{"name":"青森県","slug":"aomori","region":"東北"},{"name":"岩手県","slug":"iwate","region":"東北"},{"name":"宮城県","slug":"miyagi","region":"東北"},{"name":"秋田県","slug":"akita","region":"東北"},{"name":"山形県","slug":"yamagata","region":"東北"},{"name":"福島県","slug":"fukushima","region":"東北"},{"name":"茨城県","slug":"ibaraki","region":"関東"},{"name":"栃木県","slug":"tochigi","region":"関東"},{"name":"群馬県","slug":"gunma","region":"関東"},{"name":"埼玉県","slug":"saitama","region":"関東"},{"name":"千葉県","slug":"chiba","region":"関東"},{"name":"東京都","slug":"tokyo","region":"関東"},{"name":"神奈川県","slug":"kanagawa","region":"関東"},{"name":"新潟県","slug":"niigata","region":"中部"},{"name":"富山県","slug":"toyama","region":"中部"},{"name":"石川県","slug":"ishikawa","region":"中部"},{"name":"福井県","slug":"fukui","region":"中部"},{"name":"山梨県","slug":"yamanashi","region":"中部"},{"name":"長野県","slug":"nagano","region":"中部"},{"name":"岐阜県","slug":"gifu","region":"中部"},{"name":"静岡県","slug":"shizuoka","region":"中部"},{"name":"愛知県","slug":"aichi","region":"中部"},{"name":"三重県","slug":"mie","region":"近畿"},{"name":"滋賀県","slug":"shiga","region":"近畿"},{"name":"京都府","slug":"kyoto","region":"近畿"},{"name":"大阪府","slug":"osaka","region":"近畿"},{"name":"兵庫県","slug":"hyogo","region":"近畿"},{"name":"奈良県","slug":"nara","region":"近畿"},{"name":"和歌山県","slug":"wakayama","region":"近畿"},{"name":"鳥取県","slug":"tottori","region":"中国"},{"name":"島根県","slug":"shimane","region":"中国"},{"name":"岡山県","slug":"okayama","region":"中国"},{"name":"広島県","slug":"hiroshima","region":"中国"},{"name":"山口県","slug":"yamaguchi","region":"中国"},{"name":"徳島県","slug":"tokushima","region":"四国"},{"name":"香川県","slug":"kagawa","region":"四国"},{"name":"愛媛県","slug":"ehime","region":"四国"},{"name":"高知県","slug":"kochi","region":"四国"},{"name":"福岡県","slug":"fukuoka","region":"九州"},{"name":"佐賀県","slug":"saga","region":"九州"},{"name":"長崎県","slug":"nagasaki","region":"九州"},{"name":"熊本県","slug":"kumamoto","region":"九州"},{"name":"大分県","slug":"oita","region":"九州"},{"name":"宮崎県","slug":"miyazaki","region":"九州"},{"name":"鹿児島県","slug":"kagoshima","region":"九州"},{"name":"沖縄県","slug":"okinawa","region":"沖縄"}],"page":{"type":"prefecture","name":"宮崎県","region":"九州","url":"https://shapeup-university.pages.dev/area/miyazaki/","lead":"日差しのある暮らしに、軽やかで続く食卓を。","message":"鶏肉、魚、豆腐を、暑い日にも食べやすい調理法で取り入れ、食事を抜かずに整えます。","proteinExamples":["鶏肉","かつお","豆腐"],"facts":[{"text":"夏の暑さや雨の多い季節を考えた工夫が必要です。","source":"気象庁 過去の気象データ","sourceUrl":"https://www.data.jma.go.jp/stats/etrn/index.php","checkedAt":"2026-07-20"},{"text":"鶏肉や魚を使った地域の食文化があります。","source":"農林水産省 うちの郷土料理","sourceUrl":"https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/index.html","checkedAt":"2026-07-20"},{"text":"日差しや暑さを避け、朝夕の活動を選べます。","source":"厚生労働省 身体活動・運動ガイド2023","sourceUrl":"https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/undou/index.html","checkedAt":"2026-07-20"}]}}</script>
+<script>(function(){
+  var host=document.getElementById('webmcp-data');
+  var ctx=document.modelContext||navigator.modelContext;
+  if(!host||!ctx)return;
+  var d;try{d=JSON.parse(host.textContent);}catch(e){return;}
+  var reply=function(v){return{content:[{type:'text',text:JSON.stringify(v)}]};};
+  var tools=[
+    {
+      name:'get_program_overview',
+      description:'シェイプアップ大学の21日間プログラムの概要と、公式LINEの登録先・登録特典を返す。プログラムの内容や申し込み先を聞かれたときに使う。',
+      inputSchema:{type:'object',properties:{}},
+      execute:function(){return reply(d.site);}
+    },
+    {
+      name:'find_prefecture_page',
+      description:'都道府県名から、その地域向けページのURLを返す。地名の一部だけでも探せる。名前を渡さなければ47件すべてを返す。',
+      inputSchema:{type:'object',properties:{name:{type:'string',description:'都道府県名。例: 東京、大阪府、北海道'}}},
+      execute:function(a){
+        var q=((a&&a.name)||'').trim();
+        var list=d.prefectures.map(function(p){return{name:p.name,region:p.region,url:d.site.baseUrl+'/area/'+p.slug+'/'};});
+        if(!q)return reply({count:list.length,prefectures:list});
+        var bare=function(s){return s.replace(/[都道府県]$/,'');};
+        var hit=list.filter(function(p){return p.name.indexOf(q)>=0||bare(q)===bare(p.name);});
+        return reply(hit.length?{matches:hit}:{matches:[],hint:'見つかりませんでした。nameを省いて呼ぶと47件すべてが返ります。'});
+      }
+    }
+  ];
+  if(d.page&&d.page.type==='prefecture'){
+    tools.push({
+      name:'get_local_guidance',
+      description:'いま開いている都道府県の、気候と食文化に合わせた食習慣のアドバイスと、その根拠になった出典を返す。',
+      inputSchema:{type:'object',properties:{}},
+      execute:function(){return reply(d.page);}
+    });
+  }
+  if(typeof ctx.registerTool==='function'){
+    tools.forEach(function(t){try{ctx.registerTool(t);}catch(e){}});
+  }else if(typeof ctx.provideContext==='function'){
+    try{ctx.provideContext({tools:tools});}catch(e){}
+  }
+})();</script>
 </body>
 </html>
